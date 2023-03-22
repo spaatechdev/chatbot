@@ -25,8 +25,7 @@ def get_ai_message(request):
                     "chatterbot.corpus.english.conversations" )
         # await asyncio.sleep(5)
         response = chatbot.get_response(request.POST['message'])
-        print(response)
-        # exit()
+        # print(response)
         return HttpResponse(response)
     else:
         return JsonResponse({
