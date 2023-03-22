@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>AI Bot</title>
+    <script src="https://code.responsivevoice.org/responsivevoice.js?key=6AqfGK6s"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script>
+
+
+    </script>
+</head>
+
+<body>
+    <script>
+        let get_ai_message_url = "{% url 'api:get_ai_message' %}";
+        console.log(get_ai_message_url);
+        let aiapi = "IDzI7WVee0wd";
+        window.SpeechRecognition = window.webkitSpeechRecognition || window.SpeechRecognition;
+        let finalTranscript = '';
+
+        let recognition = new window.SpeechRecognition();
+        recognition.interimResults = true;
+        recognition.maxAlternatives = 10;
+        recognition.continuous = true;
+        recognition.onresult = (event) => {
+            let interimTranscript = '';
+            for (let i = event.resultIndex, len = event.results.length; i < len; i++) {
+                let transcript = event.results[i][0].transcript;
+                if (event.results[i].isFinal) {
+                    finalTranscript += transcript;
+                    document.getElementById("show").innerHTML = "Me :" + transcript;
+                    async function fetchText() {
+                        let data = await $.ajax({
+                            url: get_ai_message_url,
+                            type: 'post',
+                            data: ({ message: transcript }),
+                            success: function (response) {
+                                let data = response;
+                            },
+                        });
+
+                        let voiceout = data;
+                        document.getElementById("show").innerHTML = "Robot :" + voiceout;
+                        responsiveVoice.speak(voiceout, "UK English Female");
+                    }
+                    fetchText();
+
+                }
+            }
+        }
+
+        function startButton(event) {
+            recognition.start();
+
+        }
+        recognition.start();
+    </script>
+    <div id="show"></div>
+    <button id="start_button" onclick="startButton(event)"> Start</button>
+
+</body>
+
+</html>
