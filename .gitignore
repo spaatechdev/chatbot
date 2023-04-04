@@ -1,0 +1,5 @@
+env/
+.idea/
+plux/plux/.env
+*/__pycache__/
+*/migrations/
